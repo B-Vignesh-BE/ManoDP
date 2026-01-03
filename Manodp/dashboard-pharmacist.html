@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pharmacist Dashboard | ManoDP</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <i class="fas fa-prescription-bottle-alt"></i>
+                    <h2>ManoDP</h2>
+                </div>
+                <button class="toggle-sidebar" onclick="toggleSidebar()">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+            
+            <div class="user-info">
+                <img src="https://ui-avatars.com/api/?name=Pharmacist+User&background=2e7d32&color=fff" alt="Pharmacist">
+                <div class="user-details">
+                    <h4 id="pharmacistName">Amit Sharma</h4>
+                    <p id="pharmacyName">City Medicals</p>
+                    <span class="role-badge pharmacist-badge">
+                        <i class="fas fa-prescription-bottle"></i> Pharmacist
+                    </span>
+                </div>
+            </div>
+            
+            <nav class="sidebar-menu">
+                <a href="dashboard-pharmacist.html" class="active">
+                    <i class="fas fa-home"></i> <span>Dashboard</span>
+                </a>
+                <a href="verify-prescription.html">
+                    <i class="fas fa-check-circle"></i> <span>Verify Prescriptions</span>
+                </a>
+                <a href="view-prescriptions.html">
+                    <i class="fas fa-history"></i> <span>Prescription History</span>
+                </a>
+                <a href="#">
+                    <i class="fas fa-pills"></i> <span>Medicine Stock</span>
+                </a>
+                <a href="#">
+                    <i class="fas fa-bell"></i> <span>Notifications</span> <span class="badge">8</span>
+                </a>
+                <a href="#" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i> <span>Logout</span>
+                </a>
+            </nav>
+            
+            <div class="sidebar-footer">
+                <p><i class="fas fa-store"></i> Pharmacy ID: PHARM001</p>
+                <p class="small">License valid until: Dec 2026</p>
+            </div>
+        </aside>
+        
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="main-header">
+                <div class="header-left">
+                    <h1>Pharmacist Dashboard</h1>
+                    <p id="welcomeMessage">Welcome to City Medicals</p>
+                </div>
+                <div class="header-right">
+                    <div class="search-box">
+                        <i class="fas fa-search"></i>
+                        <input type="text" placeholder="Search prescriptions...">
+                    </div>
+                    <button class="btn-primary" onclick="window.location.href='verify-prescription.html'">
+                        <i class="fas fa-qrcode"></i> Scan Prescription
+                    </button>
+                </div>
+            </header>
+            
+            <!-- Pharmacy Stats -->
+            <div class="stats-cards">
+                <div class="stat-card">
+                    <div class="stat-icon" style="background: #e8f5e9;">
+                        <i class="fas fa-file-prescription" style="color: #2e7d32;"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="prescriptionsToday">24</h3>
+                        <p>Prescriptions Today</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon" style="background: #fff3e0;">
+                        <i class="fas fa-clock" style="color: #ef6c00;"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="pendingVerifications">8</h3>
+                        <p>Pending Verifications</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon" style="background: #e3f2fd;">
+                        <i class="fas fa-pills" style="color: #1a73e8;"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="medicinesDispensed">156</h3>
+                        <p>Medicines Dispensed</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon" style="background: #ffebee;">
+                        <i class="fas fa-exclamation-triangle" style="color: #d32f2f;"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="stockAlerts">3</h3>
+                        <p>Stock Alerts</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Pending Verifications -->
+            <div class="card">
+                <div class="card-header">
+                    <h3><i class="fas fa-clock"></i> Pending Verifications</h3>
+                    <a href="verify-prescription.html" class="view-all">Verify All</a>
+                </div>
+                <div class="card-body">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Prescription ID</th>
+                                <th>Patient</th>
+                                <th>Doctor</th>
+                                <th>Date</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>RX-202512001</td>
+                                <td>
+                                    <div class="patient-cell">
+                                        <img src="https://ui-avatars.com/api/?name=Rajesh+K&background=0d47a1&color=fff" alt="Rajesh">
+                                        <div>
+                                            <strong>Rajesh Kumar</strong>
+                                            <small>Age: 45</small>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>Dr. Ramesh Kumar</td>
+                                <td>10 Dec 2025</td>
+                                <td><span class="status pending">Pending</span></td>
+                                <td>
+                                    <button class="btn-small" onclick="verifyPrescription('RX-202512001')">
+                                        <i class="fas fa-check"></i> Verify
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>RX-202512002</td>
+                                <td>
+                                    <div class="patient-cell">
+                                        <img src="https://ui-avatars.com/api/?name=Meena+S&background=9c27b0&color=fff" alt="Meena">
+                                        <div>
+                                            <strong>Meena Sharma</strong>
+                                            <small>Age: 32</small>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>Dr. Priya Singh</td>
+                                <td>10 Dec 2025</td>
+                                <td><span class="status pending">Pending</span></td>
+                                <td>
+                                    <button class="btn-small" onclick="verifyPrescription('RX-202512002')">
+                                        <i class="fas fa-check"></i> Verify
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <!-- Quick Actions -->
+            <div class="dashboard-grid">
+                <div class="card">
+                    <div class="card-header">
+                        <h3><i class="fas fa-bolt"></i> Quick Actions</h3>
+                    </div>
+                    <div class="card-body quick-actions">
+                        <button class="action-btn" onclick="window.location.href='verify-prescription.html'">
+                            <i class="fas fa-qrcode"></i>
+                            <span>Scan QR Code</span>
+                        </button>
+                        <button class="action-btn" onclick="checkStock()">
+                            <i class="fas fa-boxes"></i>
+                            <span>Check Stock</span>
+                        </button>
+                        <button class="action-btn" onclick="addMedicine()">
+                            <i class="fas fa-plus-circle"></i>
+                            <span>Add Medicine</span>
+                        </button>
+                        <button class="action-btn" onclick="generateBill()">
+                            <i class="fas fa-receipt"></i>
+                            <span>Generate Bill</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h3><i class="fas fa-exclamation-triangle"></i> Stock Alerts</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="alerts-list">
+                            <div class="alert-item">
+                                <i class="fas fa-pills" style="color: #d32f2f;"></i>
+                                <div>
+                                    <strong>Paracetamol 500mg</strong>
+                                    <p>Low stock: 25 units remaining</p>
+                                </div>
+                            </div>
+                            <div class="alert-item">
+                                <i class="fas fa-pills" style="color: #ff9800;"></i>
+                                <div>
+                                    <strong>Amoxicillin 250mg</strong>
+                                    <p>Reorder level: 50 units remaining</p>
+                                </div>
+                            </div>
+                            <div class="alert-item">
+                                <i class="fas fa-pills" style="color: #ff9800;"></i>
+                                <div>
+                                    <strong>Vitamin C tablets</strong>
+                                    <p>Reorder level: 30 units remaining</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <script src="js/auth.js"></script>
+    <script src="js/script.js"></script>
+    <script src="js/dashboard.js"></script>
+    <script>
+        // Pharmacist specific functions
+        function verifyPrescription(prescriptionId) {
+            showAlert(`Verifying prescription ${prescriptionId}...`, 'info');
+            setTimeout(() => {
+                showAlert(`Prescription ${prescriptionId} verified successfully!`, 'success');
+            }, 1500);
+        }
+        
+        function checkStock() {
+            showAlert('Checking medicine stock...', 'info');
+        }
+        
+        function addMedicine() {
+            showAlert('Opening medicine addition form...', 'info');
+        }
+        
+        function generateBill() {
+            showAlert('Opening bill generation...', 'info');
+        }
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            if (checkAuth() !== 'pharmacist') {
+                window.location.href = 'index.html';
+                return;
+            }
+            
+            // Load pharmacist data
+            const pharmacistName = localStorage.getItem('userName') || 'Pharmacist';
+            const pharmacyName = localStorage.getItem('pharmacyName') || 'Your Pharmacy';
+            
+            document.getElementById('pharmacistName').textContent = pharmacistName;
+            document.getElementById('pharmacyName').textContent = pharmacyName;
+            document.getElementById('welcomeMessage').textContent = `Welcome to ${pharmacyName}`;
+            
+            loadPharmacistDashboard();
+        });
+    </script>
+    
+    <style>
+        .alerts-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .alert-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px;
+            border: 1px solid #ffcdd2;
+            border-radius: 8px;
+            background: #ffebee;
+        }
+        
+        .alert-item i {
+            font-size: 1.5rem;
+        }
+        
+        .alert-item div {
+            flex: 1;
+        }
+        
+        .alert-item strong {
+            display: block;
+            margin-bottom: 5px;
+            color: #d32f2f;
+        }
+        
+        .alert-item p {
+            color: #666;
+            font-size: 0.9rem;
+        }
+    </style>
+</body>
+</html>

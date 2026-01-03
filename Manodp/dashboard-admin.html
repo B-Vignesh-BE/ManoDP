@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard | ManoDP</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <i class="fas fa-prescription-bottle-alt"></i>
+                    <h2>ManoDP</h2>
+                </div>
+                <button class="toggle-sidebar" onclick="toggleSidebar()">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+            
+            <div class="user-info">
+                <img src="https://ui-avatars.com/api/?name=Admin+User&background=ef6c00&color=fff" alt="Admin">
+                <div class="user-details">
+                    <h4>Admin User</h4>
+                    <p>System Administrator</p>
+                    <span class="role-badge admin-badge">
+                        <i class="fas fa-cogs"></i> Admin
+                    </span>
+                </div>
+            </div>
+            
+            <nav class="sidebar-menu">
+                <a href="dashboard-admin.html" class="active">
+                    <i class="fas fa-home"></i> <span>Dashboard</span>
+                </a>
+                <a href="manage-users.html">
+                    <i class="fas fa-users"></i> <span>Manage Users</span>
+                </a>
+                <a href="view-prescriptions.html">
+                    <i class="fas fa-file-prescription"></i> <span>All Prescriptions</span>
+                </a>
+                <a href="#">
+                    <i class="fas fa-chart-bar"></i> <span>Analytics</span>
+                </a>
+                <a href="#">
+                    <i class="fas fa-cog"></i> <span>System Settings</span>
+                </a>
+                <a href="#">
+                    <i class="fas fa-bell"></i> <span>Notifications</span> <span class="badge">5</span>
+                </a>
+                <a href="#" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i> <span>Logout</span>
+                </a>
+            </nav>
+            
+            <div class="sidebar-footer">
+                <p><i class="fas fa-server"></i> System Status: <span class="status active">Online</span></p>
+                <p class="small">Last updated: Just now</p>
+            </div>
+        </aside>
+        
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="main-header">
+                <div class="header-left">
+                    <h1>Admin Dashboard</h1>
+                    <p>System Overview & Management</p>
+                </div>
+                <div class="header-right">
+                    <div class="search-box">
+                        <i class="fas fa-search"></i>
+                        <input type="text" placeholder="Search users, logs...">
+                    </div>
+                    <button class="btn-primary" onclick="window.location.href='manage-users.html'">
+                        <i class="fas fa-user-plus"></i> Add User
+                    </button>
+                </div>
+            </header>
+            
+            <!-- System Stats -->
+            <div class="stats-cards">
+                <div class="stat-card">
+                    <div class="stat-icon" style="background: #e3f2fd;">
+                        <i class="fas fa-users" style="color: #1a73e8;"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="totalUsers">245</h3>
+                        <p>Total Users</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon" style="background: #e8f5e9;">
+                        <i class="fas fa-user-md" style="color: #2e7d32;"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="totalDoctors">48</h3>
+                        <p>Doctors</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon" style="background: #f3e5f5;">
+                        <i class="fas fa-user-injured" style="color: #7b1fa2;"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="totalPatients">180</h3>
+                        <p>Patients</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon" style="background: #fff3e0;">
+                        <i class="fas fa-prescription-bottle" style="color: #ef6c00;"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="totalPharmacists">17</h3>
+                        <p>Pharmacists</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- System Health & Recent Activity -->
+            <div class="dashboard-grid">
+                <div class="card">
+                    <div class="card-header">
+                        <h3><i class="fas fa-heartbeat"></i> System Health</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="health-metrics">
+                            <div class="metric">
+                                <label>Server Uptime</label>
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: 99.8%"></div>
+                                </div>
+                                <span>99.8%</span>
+                            </div>
+                            <div class="metric">
+                                <label>Database Load</label>
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: 65%"></div>
+                                </div>
+                                <span>65%</span>
+                            </div>
+                            <div class="metric">
+                                <label>API Response Time</label>
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: 85%"></div>
+                                </div>
+                                <span>85ms avg</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h3><i class="fas fa-shield-alt"></i> Security Status</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="security-status">
+                            <div class="security-item secure">
+                                <i class="fas fa-check-circle"></i>
+                                <span>Firewall Active</span>
+                            </div>
+                            <div class="security-item secure">
+                                <i class="fas fa-check-circle"></i>
+                                <span>SSL Enabled</span>
+                            </div>
+                            <div class="security-item warning">
+                                <i class="fas fa-exclamation-triangle"></i>
+                                <span>2 Failed Logins</span>
+                            </div>
+                            <div class="security-item secure">
+                                <i class="fas fa-check-circle"></i>
+                                <span>Backup Updated</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Recent Activity -->
+            <div class="card">
+                <div class="card-header">
+                    <h3><i class="fas fa-history"></i> Recent System Activity</h3>
+                    <a href="#" class="view-all">View Logs</a>
+                </div>
+                <div class="card-body">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Time</th>
+                                <th>User</th>
+                                <th>Activity</th>
+                                <th>IP Address</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>10:25 AM</td>
+                                <td>
+                                    <div class="patient-cell">
+                                        <img src="https://ui-avatars.com/api/?name=Dr+Ramesh&background=1a73e8&color=fff" alt="Dr. Ramesh">
+                                        <div>
+                                            <strong>Dr. Ramesh</strong>
+                                            <small>Doctor</small>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>Created new prescription</td>
+                                <td>192.168.1.105</td>
+                            </tr>
+                            <tr>
+                                <td>09:45 AM</td>
+                                <td>
+                                    <div class="patient-cell">
+                                        <img src="https://ui-avatars.com/api/?name=Rajesh+K&background=ff9800&color=fff" alt="Rajesh">
+                                        <div>
+                                            <strong>Rajesh Kumar</strong>
+                                            <small>Patient</small>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>Logged in</td>
+                                <td>103.56.78.90</td>
+                            </tr>
+                            <tr>
+                                <td>09:15 AM</td>
+                                <td>
+                                    <div class="patient-cell">
+                                        <img src="https://ui-avatars.com/api/?name=Amit+Sharma&background=2e7d32&color=fff" alt="Amit">
+                                        <div>
+                                            <strong>Amit Sharma</strong>
+                                            <small>Pharmacist</small>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>Verified prescription</td>
+                                <td>192.168.1.110</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <!-- Quick Admin Actions -->
+            <div class="card">
+                <div class="card-header">
+                    <h3><i class="fas fa-bolt"></i> Quick Admin Actions</h3>
+                </div>
+                <div class="card-body quick-actions">
+                    <button class="action-btn" onclick="window.location.href='manage-users.html'">
+                        <i class="fas fa-user-cog"></i>
+                        <span>Manage Users</span>
+                    </button>
+                    <button class="action-btn" onclick="backupSystem()">
+                        <i class="fas fa-database"></i>
+                        <span>Backup System</span>
+                    </button>
+                    <button class="action-btn" onclick="viewAuditLogs()">
+                        <i class="fas fa-clipboard-list"></i>
+                        <span>Audit Logs</span>
+                    </button>
+                    <button class="action-btn" onclick="systemSettings()">
+                        <i class="fas fa-sliders-h"></i>
+                        <span>Settings</span>
+                    </button>
+                    <button class="action-btn" onclick="generateReports()">
+                        <i class="fas fa-chart-pie"></i>
+                        <span>Reports</span>
+                    </button>
+                    <button class="action-btn" onclick="systemRestart()">
+                        <i class="fas fa-redo"></i>
+                        <span>Restart Services</span>
+                    </button>
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <script src="js/auth.js"></script>
+    <script src="js/script.js"></script>
+    <script src="js/dashboard.js"></script>
+    <script>
+        // Admin specific functions
+        function backupSystem() {
+            showAlert('Starting system backup...', 'info');
+            setTimeout(() => {
+                showAlert('Backup completed successfully!', 'success');
+            }, 2000);
+        }
+        
+        function viewAuditLogs() {
+            showAlert('Opening audit logs...', 'info');
+        }
+        
+        function systemSettings() {
+            showAlert('Opening system settings...', 'info');
+        }
+        
+        function generateReports() {
+            showAlert('Generating system reports...', 'info');
+        }
+        
+        function systemRestart() {
+            if (confirm('Are you sure you want to restart system services?')) {
+                showAlert('Restarting services...', 'warning');
+                setTimeout(() => {
+                    showAlert('Services restarted successfully!', 'success');
+                }, 1500);
+            }
+        }
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            if (checkAuth() !== 'admin') {
+                window.location.href = 'index.html';
+                return;
+            }
+            loadAdminDashboard();
+        });
+    </script>
+    
+    <style>
+        .health-metrics {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .metric {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .metric label {
+            min-width: 120px;
+            font-weight: 500;
+            color: #444;
+        }
+        
+        .progress-bar {
+            flex: 1;
+            height: 8px;
+            background: #eee;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(to right, #4caf50, #8bc34a);
+            border-radius: 4px;
+        }
+        
+        .metric span {
+            min-width: 60px;
+            text-align: right;
+            font-weight: 600;
+            color: #1a237e;
+        }
+        
+        .security-status {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .security-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px;
+            border-radius: 8px;
+            background: #f5f5f5;
+        }
+        
+        .security-item.secure {
+            border-left: 4px solid #4caf50;
+        }
+        
+        .security-item.warning {
+            border-left: 4px solid #ff9800;
+        }
+        
+        .security-item i {
+            font-size: 1.2rem;
+        }
+        
+        .security-item.secure i {
+            color: #4caf50;
+        }
+        
+        .security-item.warning i {
+            color: #ff9800;
+        }
+    </style>
+</body>
+</html>

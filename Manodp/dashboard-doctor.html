@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doctor Dashboard | ManoDP</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <i class="fas fa-prescription-bottle-alt"></i>
+                    <h2>ManoDP</h2>
+                </div>
+                <button class="toggle-sidebar" onclick="toggleSidebar()">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+            
+            <div class="user-info">
+                <img src="https://ui-avatars.com/api/?name=Doctor+User&background=1a73e8&color=fff" alt="Doctor">
+                <div class="user-details">
+                    <h4>Dr. Ramesh Kumar</h4>
+                    <p>Cardiologist</p>
+                    <span class="role-badge doctor-badge">
+                        <i class="fas fa-user-md"></i> Doctor
+                    </span>
+                </div>
+            </div>
+            
+            <nav class="sidebar-menu">
+                <a href="dashboard-doctor.html" class="active">
+                    <i class="fas fa-home"></i> <span>Dashboard</span>
+                </a>
+                <a href="create-prescription.html">
+                    <i class="fas fa-file-medical"></i> <span>Create Prescription</span>
+                </a>
+                <a href="view-prescriptions.html">
+                    <i class="fas fa-history"></i> <span>Prescription History</span>
+                </a>
+                <a href="#">
+                    <i class="fas fa-users"></i> <span>My Patients</span>
+                </a>
+                <a href="medicine-identify.html">
+                    <i class="fas fa-pills"></i> <span>Medicine Identify</span>
+                </a>
+                <a href="#">
+                    <i class="fas fa-bell"></i> <span>Notifications</span> <span class="badge">3</span>
+                </a>
+                <a href="#">
+                    <i class="fas fa-cog"></i> <span>Settings</span>
+                </a>
+                <a href="#" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i> <span>Logout</span>
+                </a>
+            </nav>
+            
+            <div class="sidebar-footer">
+                <p><i class="fas fa-shield-alt"></i> Secure Session</p>
+                <p class="small">Last login: Today, 10:30 AM</p>
+            </div>
+        </aside>
+        
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="main-header">
+                <div class="header-left">
+                    <h1>Doctor Dashboard</h1>
+                    <p>Welcome back, Dr. Ramesh</p>
+                </div>
+                <div class="header-right">
+                    <div class="search-box">
+                        <i class="fas fa-search"></i>
+                        <input type="text" placeholder="Search patient, prescription...">
+                    </div>
+                    <button class="btn-primary" onclick="window.location.href='create-prescription.html'">
+                        <i class="fas fa-plus"></i> New Prescription
+                    </button>
+                    <div class="notification-icon">
+                        <i class="fas fa-bell"></i>
+                        <span class="badge">3</span>
+                    </div>
+                </div>
+            </header>
+            
+            <!-- Stats Cards -->
+            <div class="stats-cards">
+                <div class="stat-card">
+                    <div class="stat-icon" style="background: #e3f2fd;">
+                        <i class="fas fa-file-prescription" style="color: #1a73e8;"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="todayPrescriptions">48</h3>
+                        <p>Prescriptions Today</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon" style="background: #e8f5e9;">
+                        <i class="fas fa-user-injured" style="color: #2e7d32;"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="totalPatients">126</h3>
+                        <p>Total Patients</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon" style="background: #fff3e0;">
+                        <i class="fas fa-clock" style="color: #ef6c00;"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="pendingReviews">12</h3>
+                        <p>Pending Reviews</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon" style="background: #f3e5f5;">
+                        <i class="fas fa-pills" style="color: #7b1fa2;"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="medicinesIdentified">245</h3>
+                        <p>Medicines Identified</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Recent Activity & Quick Actions -->
+            <div class="dashboard-grid">
+                <div class="card">
+                    <div class="card-header">
+                        <h3><i class="fas fa-history"></i> Recent Prescriptions</h3>
+                        <a href="view-prescriptions.html" class="view-all">View All</a>
+                    </div>
+                    <div class="card-body">
+                        <div id="recentPrescriptions">
+                            <!-- Will be populated by JavaScript -->
+                            <p class="loading-text">Loading prescriptions...</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h3><i class="fas fa-bolt"></i> Quick Actions</h3>
+                    </div>
+                    <div class="card-body quick-actions">
+                        <button class="action-btn" onclick="window.location.href='create-prescription.html'">
+                            <i class="fas fa-file-medical"></i>
+                            <span>New Prescription</span>
+                        </button>
+                        <button class="action-btn" onclick="window.location.href='medicine-identify.html'">
+                            <i class="fas fa-camera"></i>
+                            <span>Identify Medicine</span>
+                        </button>
+                        <button class="action-btn" onclick="addNewPatient()">
+                            <i class="fas fa-user-plus"></i>
+                            <span>Add Patient</span>
+                        </button>
+                        <button class="action-btn" onclick="window.location.href='view-prescriptions.html'">
+                            <i class="fas fa-history"></i>
+                            <span>View History</span>
+                        </button>
+                        <button class="action-btn" onclick="printReports()">
+                            <i class="fas fa-print"></i>
+                            <span>Print Reports</span>
+                        </button>
+                        <button class="action-btn" onclick="openHelp()">
+                            <i class="fas fa-question-circle"></i>
+                            <span>Help</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Today's Appointments -->
+            <div class="card">
+                <div class="card-header">
+                    <h3><i class="fas fa-calendar-check"></i> Today's Appointments</h3>
+                </div>
+                <div class="card-body">
+                    <div id="todaysAppointments">
+                        <!-- Will be populated by JavaScript -->
+                        <p class="loading-text">Loading appointments...</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <script src="js/auth.js"></script>
+    <script src="js/script.js"></script>
+    <script src="js/dashboard.js"></script>
+    <script>
+        // Initialize doctor dashboard
+        document.addEventListener('DOMContentLoaded', function() {
+            if (checkAuth() !== 'doctor') {
+                window.location.href = 'index.html';
+                return;
+            }
+            loadDoctorDashboard();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Prescriptions | ManoDP</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/forms.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar (Will be same as respective dashboard) -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <i class="fas fa-prescription-bottle-alt"></i>
+                    <h2>ManoDP</h2>
+                </div>
+                <button class="toggle-sidebar" onclick="toggleSidebar()">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+            
+            <div class="user-info">
+                <img src="https://ui-avatars.com/api/?name=User&background=1a73e8&color=fff" alt="User">
+                <div class="user-details">
+                    <h4 id="userName">User</h4>
+                    <p id="userRole">Loading...</p>
+                </div>
+            </div>
+            
+            <nav class="sidebar-menu" id="sidebarMenu">
+                <!-- Will be populated by JavaScript -->
+            </nav>
+        </aside>
+        
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="main-header">
+                <div class="header-left">
+                    <h1>My Prescriptions</h1>
+                    <p>View and manage your prescriptions</p>
+                </div>
+                <div class="header-right">
+                    <div class="search-box">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="searchInput" placeholder="Search prescriptions...">
+                    </div>
+                    <button class="btn-secondary" onclick="goBack()">
+                        <i class="fas fa-arrow-left"></i> Back
+                    </button>
+                </div>
+            </header>
+            
+            <!-- Filters -->
+            <div class="filters-bar">
+                <select id="statusFilter" onchange="filterPrescriptions()">
+                    <option value="all">All Status</option>
+                    <option value="active">Active</option>
+                    <option value="completed">Completed</option>
+                    <option value="expired">Expired</option>
+                </select>
+                
+                <select id="dateFilter" onchange="filterPrescriptions()">
+                    <option value="all">All Time</option>
+                    <option value="today">Today</option>
+                    <option value="week">This Week</option>
+                    <option value="month">This Month</option>
+                </select>
+                
+                <button class="btn-secondary" onclick="resetFilters()">
+                    <i class="fas fa-redo"></i> Reset
+                </button>
+            </div>
+            
+            <!-- Prescriptions List -->
+            <div class="prescriptions-container" id="prescriptionsList">
+                <div class="loading-state">
+                    <i class="fas fa-spinner fa-spin"></i>
+                    <p>Loading prescriptions...</p>
+                </div>
+            </div>
+            
+            <!-- No Results -->
+            <div class="no-results" id="noResults" style="display: none;">
+                <i class="fas fa-file-medical-alt"></i>
+                <h3>No Prescriptions Found</h3>
+                <p>You don't have any prescriptions yet.</p>
+            </div>
+        </main>
+    </div>
+    
+    <!-- Prescription Details Modal -->
+    <div class="modal-overlay" id="prescriptionModal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modalTitle">Prescription Details</h3>
+                <button class="modal-close" onclick="closeModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <!-- Will be populated by JavaScript -->
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secondary" onclick="closeModal()">
+                    Close
+                </button>
+                <button class="btn-primary" onclick="printPrescription()">
+                    <i class="fas fa-print"></i> Print
+                </button>
+                <button class="btn-success" onclick="downloadPrescription()">
+                    <i class="fas fa-download"></i> Download PDF
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <script src="js/auth.js"></script>
+    <script src="js/script.js"></script>
+    <script src="js/prescription.js"></script>
+    <script>
+        // View Prescriptions Page JavaScript
+        let allPrescriptions = [];
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            const userRole = checkAuth();
+            if (!userRole) {
+                window.location.href = 'index.html';
+                return;
+            }
+            
+            // Update user info
+            document.getElementById('userName').textContent = localStorage.getItem('userName') || 'User';
+            document.getElementById('userRole').textContent = userRole.charAt(0).toUpperCase() + userRole.slice(1);
+            
+            // Load sidebar menu based on role
+            loadSidebarMenu(userRole);
+            
+            // Load prescriptions
+            loadPrescriptions(userRole);
+            
+            // Setup search
+            const searchInput = document.getElementById('searchInput');
+            searchInput.addEventListener('input', debounce(searchPrescriptions, 300));
+        });
+        
+        function loadSidebarMenu(role) {
+            const menuContainer = document.getElementById('sidebarMenu');
+            let menuItems = '';
+            
+            const menus = {
+                doctor: [
+                    { href: 'dashboard-doctor.html', icon: 'fa-home', text: 'Dashboard' },
+                    { href: 'create-prescription.html', icon: 'fa-file-medical', text: 'Create Prescription' },
+                    { href: 'view-prescriptions.html', icon: 'fa-history', text: 'Prescription History', active: true },
+                    { href: 'medicine-identify.html', icon: 'fa-pills', text: 'Medicine Identify' },
+                    { href: '#', icon: 'fa-sign-out-alt', text: 'Logout', onclick: 'logout()' }
+                ],
+                patient: [
+                    { href: 'dashboard-patient.html', icon: 'fa-home', text: 'Dashboard' },
+                    { href: 'view-prescriptions.html', icon: 'fa-file-prescription', text: 'My Prescriptions', active: true },
+                    { href: 'medicine-identify.html', icon: 'fa-pills', text: 'Medicine Identify' },
+                    { href: '#', icon: 'fa-sign-out-alt', text: 'Logout', onclick: 'logout()' }
+                ],
+                pharmacist: [
+                    { href: 'dashboard-pharmacist.html', icon: 'fa-home', text: 'Dashboard' },
+                    { href: 'verify-prescription.html', icon: 'fa-check-circle', text: 'Verify Prescriptions' },
+                    { href: 'view-prescriptions.html', icon: 'fa-history', text: 'Prescription History', active: true },
+                    { href: '#', icon: 'fa-sign-out-alt', text: 'Logout', onclick: 'logout()' }
+                ],
+                admin: [
+                    { href: 'dashboard-admin.html', icon: 'fa-home', text: 'Dashboard' },
+                    { href: 'manage-users.html', icon: 'fa-users', text: 'Manage Users' },
+                    { href: 'view-prescriptions.html', icon: 'fa-history', text: 'All Prescriptions', active: true },
+                    { href: '#', icon: 'fa-sign-out-alt', text: 'Logout', onclick: 'logout()' }
+                ]
+            };
+            
+            const currentMenu = menus[role] || menus.patient;
+            
+            currentMenu.forEach(item => {
+                const activeClass = window.location.pathname.includes(item.href) || item.active ? 'active' : '';
+                const onclickAttr = item.onclick ? `onclick="${item.onclick}"` : '';
+                menuItems += `
+                    <a href="${item.href}" class="${activeClass}" ${onclickAttr}>
+                        <i class="fas ${item.icon}"></i> <span>${item.text}</span>
+                    </a>
+                `;
+            });
+            
+            menuContainer.innerHTML = menuItems;
+        }
+        
+        function loadPrescriptions(role) {
+            // In real app, this would fetch from backend
+            // For demo, use localStorage data or sample data
+            
+            setTimeout(() => {
+                // Sample prescriptions data
+                allPrescriptions = [
+                    {
+                        id: 1,
+                        prescriptionNumber: 'RX-202512001',
+                        patientName: 'Rajesh Kumar',
+                        patientAge: 45,
+                        doctorName: 'Dr. Ramesh Kumar',
+                        date: '2025-12-10',
+                        diagnosis: 'Hypertension',
+                        status: 'active',
+                        medicines: [
+                            { name: 'Amlodipine', dosage: '5mg', frequency: 'Once daily', duration: '30 days' },
+                            { name: 'Losartan', dosage: '50mg', frequency: 'Once daily', duration: '30 days' }
+                        ]
+                    },
+                    {
+                        id: 2,
+                        prescriptionNumber: 'RX-202511045',
+                        patientName: 'Meena Sharma',
+                        patientAge: 32,
+                        doctorName: 'Dr. Ramesh Kumar',
+                        date: '2025-11-28',
+                        diagnosis: 'Migraine',
+                        status: 'completed',
+                        medicines: [
+                            { name: 'Sumatriptan', dosage: '50mg', frequency: 'As needed', duration: '10 days' }
+                        ]
+                    }
+                ];
+                
+                displayPrescriptions(allPrescriptions);
+                
+            }, 500);
+        }
+        
+        function displayPrescriptions(prescriptions) {
+            const container = document.getElementById('prescriptionsList');
+            const noResults = document.getElementById('noResults');
+            
+            if (prescriptions.length === 0) {
+                container.style.display = 'none';
+                noResults.style.display = 'block';
+                return;
+            }
+            
+            noResults.style.display = 'none';
+            
+            container.innerHTML = prescriptions.map(pres => `
+                <div class="prescription-card" onclick="viewPrescriptionDetails(${pres.id})">
+                    <div class="prescription-header">
+                        <div>
+                            <h3>${pres.prescriptionNumber}</h3>
+                            <p>${pres.patientName}, ${pres.patientAge} years</p>
+                        </div>
+                        <span class="status ${pres.status}">${pres.status}</span>
+                    </div>
+                    <div class="prescription-body">
+                        <div class="prescription-info">
+                            <p><i class="fas fa-user-md"></i> ${pres.doctorName}</p>
+                            <p><i class="fas fa-calendar"></i> ${formatDate(pres.date)}</p>
+                            <p><i class="fas fa-diagnoses"></i> ${pres.diagnosis}</p>
+                        </div>
+                        <div class="prescription-actions">
+                            <button class="btn-small" onclick="event.stopPropagation(); viewPrescriptionDetails(${pres.id})">
+                                <i class="fas fa-eye"></i> View
+                            </button>
+                            <button class="btn-small" onclick="event.stopPropagation(); downloadPrescription(${pres.id})">
+                                <i class="fas fa-download"></i> Download
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        function viewPrescriptionDetails(prescriptionId) {
+            const prescription = allPrescriptions.find(p => p.id === prescriptionId);
+            if (!prescription) return;
+            
+            // Populate modal
+            document.getElementById('modalTitle').textContent = `Prescription ${prescription.prescriptionNumber}`;
+            
+            const modalBody = document.getElementById('modalBody');
+            modalBody.innerHTML = `
+                <div class="prescription-details">
+                    <div class="detail-section">
+                        <h4><i class="fas fa-user-injured"></i> Patient Information</h4>
+                        <div class="detail-grid">
+                            <div class="detail-item">
+                                <label>Name</label>
+                                <span>${prescription.patientName}</span>
+                            </div>
+                            <div class="detail-item">
+                                <label>Age</label>
+                                <span>${prescription.patientAge} years</span>
+                            </div>
+                            <div class="detail-item">
+                                <label>Prescription Date</label>
+                                <span>${formatDate(prescription.date, true)}</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="detail-section">
+                        <h4><i class="fas fa-user-md"></i> Doctor Information</h4>
+                        <p>${prescription.doctorName}</p>
+                    </div>
+                    
+                    <div class="detail-section">
+                        <h4><i class="fas fa-diagnoses"></i> Diagnosis</h4>
+                        <p>${prescription.diagnosis}</p>
+                    </div>
+                    
+                    <div class="detail-section">
+                        <h4><i class="fas fa-pills"></i> Medicines</h4>
+                        <table class="medicines-table">
+                            <thead>
+                                <tr>
+                                    <th>Medicine Name</th>
+                                    <th>Dosage</th>
+                                    <th>Frequency</th>
+                                    <th>Duration</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${prescription.medicines.map(med => `
+                                    <tr>
+                                        <td>${med.name}</td>
+                                        <td>${med.dosage}</td>
+                                        <td>${med.frequency}</td>
+                                        <td>${med.duration}</td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div class="detail-section">
+                        <h4><i class="fas fa-qrcode"></i> Verification QR Code</h4>
+                        <div class="qr-code">
+                            <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(`ManoDP:${prescription.prescriptionNumber}`)}" 
+                                 alt="QR Code">
+                            <p>Scan to verify prescription authenticity</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            // Show modal
+            document.getElementById('prescriptionModal').style.display = 'flex';
+        }
+        
+        function closeModal() {
+            document.getElementById('prescriptionModal').style.display = 'none';
+        }
+        
+        function filterPrescriptions() {
+            const status = document.getElementById('statusFilter').value;
+            const dateFilter = document.getElementById('dateFilter').value;
+            
+            let filtered = allPrescriptions;
+            
+            // Filter by status
+            if (status !== 'all') {
+                filtered = filtered.filter(p => p.status === status);
+            }
+            
+            // Filter by date
+            if (dateFilter !== 'all') {
+                const now = new Date();
+                filtered = filtered.filter(p => {
+                    const presDate = new Date(p.date);
+                    
+                    switch(dateFilter) {
+                        case 'today':
+                            return presDate.toDateString() === now.toDateString();
+                        case 'week':
+                            const weekAgo = new Date(now - 7 * 24 * 60 * 60 * 1000);
+                            return presDate >= weekAgo;
+                        case 'month':
+                            const monthAgo = new Date(now.getFullYear(), now.getMonth() - 1, now.getDate());
+                            return presDate >= monthAgo;
+                        default:
+                            return true;
+                    }
+                });
+            }
+            
+            displayPrescriptions(filtered);
+        }
+        
+        function resetFilters() {
+            document.getElementById('statusFilter').value = 'all';
+            document.getElementById('dateFilter').value = 'all';
+            displayPrescriptions(allPrescriptions);
+        }
+        
+        function searchPrescriptions() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            
+            if (!searchTerm) {
+                displayPrescriptions(allPrescriptions);
+                return;
+            }
+            
+            const filtered = allPrescriptions.filter(p =>
+                p.prescriptionNumber.toLowerCase().includes(searchTerm) ||
+                p.patientName.toLowerCase().includes(searchTerm) ||
+                p.doctorName.toLowerCase().includes(searchTerm) ||
+                p.diagnosis.toLowerCase().includes(searchTerm)
+            );
+            
+            displayPrescriptions(filtered);
+        }
+        
+        function printPrescription() {
+            window.print();
+        }
+        
+        function downloadPrescription(prescriptionId) {
+            if (prescriptionId) {
+                showAlert(`Downloading prescription ${prescriptionId}...`, 'info');
+                // In real app, this would generate and download PDF
+            } else {
+                showAlert('Downloading prescription...', 'info');
+            }
+        }
+        
+        function goBack() {
+            const userRole = localStorage.getItem('userRole');
+            redirectToDashboard(userRole);
+        }
+        
+        // Debounce function for search
+        function debounce(func, wait) {
+            let timeout;
+            return function executedFunction(...args) {
+                const later = () => {
+                    clearTimeout(timeout);
+                    func(...args);
+                };
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+            };
+        }
+    </script>
+</body>
+</html>

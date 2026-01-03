@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patient Dashboard | ManoDP</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <i class="fas fa-prescription-bottle-alt"></i>
+                    <h2>ManoDP</h2>
+                </div>
+                <button class="toggle-sidebar" onclick="toggleSidebar()">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+            
+            <div class="user-info">
+                <img src="https://ui-avatars.com/api/?name=Patient+User&background=ff9800&color=fff" alt="Patient">
+                <div class="user-details">
+                    <h4 id="patientUserName">Rajesh Kumar</h4>
+                    <p>Patient ID: PAT001</p>
+                    <span class="role-badge patient-badge">
+                        <i class="fas fa-user-injured"></i> Patient
+                    </span>
+                </div>
+            </div>
+            
+            <nav class="sidebar-menu">
+                <a href="dashboard-patient.html" class="active">
+                    <i class="fas fa-home"></i> <span>Dashboard</span>
+                </a>
+                <a href="view-prescriptions.html">
+                    <i class="fas fa-file-prescription"></i> <span>My Prescriptions</span>
+                </a>
+                <a href="medicine-identify.html">
+                    <i class="fas fa-pills"></i> <span>Medicine Identify</span>
+                </a>
+                <a href="#">
+                    <i class="fas fa-calendar-check"></i> <span>Appointments</span>
+                </a>
+                <a href="#">
+                    <i class="fas fa-bell"></i> <span>Notifications</span> <span class="badge">2</span>
+                </a>
+                <a href="#">
+                    <i class="fas fa-user-circle"></i> <span>Profile</span>
+                </a>
+                <a href="#" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i> <span>Logout</span>
+                </a>
+            </nav>
+        </aside>
+        
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="main-header">
+                <div class="header-left">
+                    <h1>Patient Dashboard</h1>
+                    <p id="welcomeMessage">Welcome back!</p>
+                </div>
+                <div class="header-right">
+                    <button class="btn-primary" onclick="window.location.href='medicine-identify.html'">
+                        <i class="fas fa-camera"></i> Identify Medicine
+                    </button>
+                </div>
+            </header>
+            
+            <!-- Stats Cards -->
+            <div class="stats-cards">
+                <div class="stat-card">
+                    <div class="stat-icon" style="background: #e8f5e9;">
+                        <i class="fas fa-file-prescription" style="color: #2e7d32;"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="activePrescriptions">2</h3>
+                        <p>Active Prescriptions</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon" style="background: #fff3e0;">
+                        <i class="fas fa-calendar-check" style="color: #ef6c00;"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="upcomingAppointments">1</h3>
+                        <p>Upcoming Appointments</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon" style="background: #e3f2fd;">
+                        <i class="fas fa-pills" style="color: #1a73e8;"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="medicinesToday">3</h3>
+                        <p>Medicines Today</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon" style="background: #f3e5f5;">
+                        <i class="fas fa-heartbeat" style="color: #7b1fa2;"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="healthScore">85</h3>
+                        <p>Health Score</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Recent Prescriptions -->
+            <div class="card">
+                <div class="card-header">
+                    <h3><i class="fas fa-history"></i> Recent Prescriptions</h3>
+                    <a href="view-prescriptions.html" class="view-all">View All</a>
+                </div>
+                <div class="card-body">
+                    <div id="patientPrescriptions">
+                        <!-- Will be populated by JavaScript -->
+                        <p class="loading-text">Loading prescriptions...</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Medicine Reminders -->
+            <div class="card">
+                <div class="card-header">
+                    <h3><i class="fas fa-bell"></i> Today's Medicine Reminders</h3>
+                </div>
+                <div class="card-body">
+                    <div class="reminders-list" id="medicineReminders">
+                        <div class="reminder-item">
+                            <div class="reminder-time">
+                                <strong>8:00 AM</strong>
+                                <small>Breakfast</small>
+                            </div>
+                            <div class="reminder-details">
+                                <h4>Paracetamol 500mg</h4>
+                                <p>1 tablet after food</p>
+                            </div>
+                            <div class="reminder-status">
+                                <span class="status pending">Pending</span>
+                            </div>
+                        </div>
+                        <div class="reminder-item">
+                            <div class="reminder-time">
+                                <strong>2:00 PM</strong>
+                                <small>Lunch</small>
+                            </div>
+                            <div class="reminder-details">
+                                <h4>Vitamin C</h4>
+                                <p>1 tablet with water</p>
+                            </div>
+                            <div class="reminder-status">
+                                <span class="status pending">Pending</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <script src="js/auth.js"></script>
+    <script src="js/script.js"></script>
+    <script src="js/dashboard.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            if (checkAuth() !== 'patient') {
+                window.location.href = 'index.html';
+                return;
+            }
+            
+            // Load patient name
+            const userName = localStorage.getItem('userName') || 'Patient';
+            document.getElementById('patientUserName').textContent = userName;
+            document.getElementById('welcomeMessage').textContent = `Welcome back, ${userName}`;
+        });
+    </script>
+</body>
+</html>

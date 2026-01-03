@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Prescription | ManoDP</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/forms.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar (Same as dashboard-doctor.html) -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <i class="fas fa-prescription-bottle-alt"></i>
+                    <h2>ManoDP</h2>
+                </div>
+                <button class="toggle-sidebar" onclick="toggleSidebar()">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+            
+            <div class="user-info">
+                <img src="https://ui-avatars.com/api/?name=Doctor+User&background=1a73e8&color=fff" alt="Doctor">
+                <div class="user-details">
+                    <h4>Dr. Ramesh Kumar</h4>
+                    <p>Cardiologist</p>
+                    <span class="role-badge doctor-badge">
+                        <i class="fas fa-user-md"></i> Doctor
+                    </span>
+                </div>
+            </div>
+            
+            <nav class="sidebar-menu">
+                <a href="dashboard-doctor.html">
+                    <i class="fas fa-home"></i> <span>Dashboard</span>
+                </a>
+                <a href="create-prescription.html" class="active">
+                    <i class="fas fa-file-medical"></i> <span>Create Prescription</span>
+                </a>
+                <a href="view-prescriptions.html">
+                    <i class="fas fa-history"></i> <span>Prescription History</span>
+                </a>
+                <a href="#">
+                    <i class="fas fa-users"></i> <span>My Patients</span>
+                </a>
+                <a href="medicine-identify.html">
+                    <i class="fas fa-pills"></i> <span>Medicine Identify</span>
+                </a>
+                <a href="#" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i> <span>Logout</span>
+                </a>
+            </nav>
+        </aside>
+        
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="main-header">
+                <div class="header-left">
+                    <h1>Create New Prescription</h1>
+                    <p>Fill in the details below to create a digital prescription</p>
+                </div>
+                <div class="header-right">
+                    <button class="btn-secondary" onclick="window.location.href='dashboard-doctor.html'">
+                        <i class="fas fa-arrow-left"></i> Back to Dashboard
+                    </button>
+                </div>
+            </header>
+            
+            <div class="form-container">
+                <form id="prescriptionForm" onsubmit="submitPrescription(event)">
+                    <!-- Patient Information Section -->
+                    <div class="form-section">
+                        <h3><i class="fas fa-user-injured"></i> Patient Information</h3>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="patientName"><i class="fas fa-user"></i> Patient Name</label>
+                                <input type="text" id="patientName" class="form-control" required placeholder="Enter patient full name">
+                            </div>
+                            <div class="form-group">
+                                <label for="patientAge"><i class="fas fa-calendar-alt"></i> Age</label>
+                                <input type="number" id="patientAge" class="form-control" required min="1" max="120" placeholder="Age">
+                            </div>
+                            <div class="form-group">
+                                <label for="patientGender"><i class="fas fa-venus-mars"></i> Gender</label>
+                                <select id="patientGender" class="form-control" required>
+                                    <option value="">Select Gender</option>
+                                    <option value="male">Male</option>
+                                    <option value="female">Female</option>
+                                    <option value="other">Other</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="patientMobile"><i class="fas fa-phone"></i> Mobile Number</label>
+                                <input type="tel" id="patientMobile" class="form-control" required placeholder="+91 9876543210">
+                            </div>
+                            <div class="form-group">
+                                <label for="patientEmail"><i class="fas fa-envelope"></i> Email (Optional)</label>
+                                <input type="email" id="patientEmail" class="form-control" placeholder="patient@example.com">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="patientAddress"><i class="fas fa-map-marker-alt"></i> Address</label>
+                            <textarea id="patientAddress" class="form-control" rows="2" placeholder="Enter patient address"></textarea>
+                        </div>
+                    </div>
+                    
+                    <!-- Diagnosis Section -->
+                    <div class="form-section">
+                        <h3><i class="fas fa-stethoscope"></i> Diagnosis & Symptoms</h3>
+                        <div class="form-group">
+                            <label for="diagnosis"><i class="fas fa-file-medical-alt"></i> Diagnosis</label>
+                            <input type="text" id="diagnosis" class="form-control" required placeholder="e.g., Hypertension, Diabetes Type 2">
+                        </div>
+                        <div class="form-group">
+                            <label for="symptoms"><i class="fas fa-thermometer"></i> Symptoms</label>
+                            <textarea id="symptoms" class="form-control" rows="3" placeholder="Describe patient symptoms"></textarea>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="visitDate"><i class="fas fa-calendar"></i> Visit Date</label>
+                                <input type="date" id="visitDate" class="form-control" required value="<?php echo date('Y-m-d'); ?>">
+                            </div>
+                            <div class="form-group">
+                                <label for="nextVisit"><i class="fas fa-calendar-check"></i> Next Visit (Optional)</label>
+                                <input type="date" id="nextVisit" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Medicines Section -->
+                    <div class="form-section">
+                        <h3><i class="fas fa-pills"></i> Medicines & Dosage</h3>
+                        <div class="medicines-container">
+                            <table class="medicines-table" id="medicinesTable">
+                                <thead>
+                                    <tr>
+                                        <th>Medicine Name</th>
+                                        <th>Dosage</th>
+                                        <th>Frequency</th>
+                                        <th>Duration</th>
+                                        <th>Instructions</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="medicinesBody">
+                                    <!-- Rows will be added here -->
+                                </tbody>
+                            </table>
+                            <button type="button" class="add-medicine-btn" onclick="addMedicineRow()">
+                                <i class="fas fa-plus-circle"></i> Add Medicine
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Additional Instructions -->
+                    <div class="form-section">
+                        <h3><i class="fas fa-clipboard-check"></i> Additional Instructions</h3>
+                        <div class="form-group">
+                            <label for="instructions"><i class="fas fa-notes-medical"></i> Doctor's Instructions</label>
+                            <textarea id="instructions" class="form-control" rows="4" placeholder="Any additional instructions for the patient..."></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="testsRecommended"><i class="fas fa-vial"></i> Tests Recommended (Optional)</label>
+                            <textarea id="testsRecommended" class="form-control" rows="2" placeholder="e.g., CBC, Lipid Profile, ECG"></textarea>
+                        </div>
+                    </div>
+                    
+                    <!-- Form Actions -->
+                    <div class="form-actions">
+                        <button type="button" class="btn-secondary" onclick="clearForm()">
+                            <i class="fas fa-trash-alt"></i> Clear Form
+                        </button>
+                        <button type="button" class="btn-secondary" onclick="saveAsDraft()">
+                            <i class="fas fa-save"></i> Save as Draft
+                        </button>
+                        <button type="submit" class="btn-success">
+                            <i class="fas fa-paper-plane"></i> Generate Prescription
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </main>
+    </div>
+    
+    <script src="js/auth.js"></script>
+    <script src="js/script.js"></script>
+    <script src="js/prescription.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            if (checkAuth() !== 'doctor') {
+                window.location.href = 'index.html';
+                return;
+            }
+            // Add first medicine row by default
+            addMedicineRow();
+            
+            // Set today's date
+            document.getElementById('visitDate').value = new Date().toISOString().split('T')[0];
+        });
+    </script>
+</body>
+</html>
