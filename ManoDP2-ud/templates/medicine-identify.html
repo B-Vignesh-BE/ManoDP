@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medicine Identification | ManoDP</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/medicine-id.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <i class="fas fa-prescription-bottle-alt"></i>
+                    <h2>ManoDP</h2>
+                </div>
+                <button class="toggle-sidebar" onclick="toggleSidebar()">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+            
+            <div class="user-info">
+                <img src="https://ui-avatars.com/api/?name=Doctor+User&background=1a73e8&color=fff" alt="Doctor">
+                <div class="user-details">
+                    <h4>Dr. Ramesh Kumar</h4>
+                    <p>Cardiologist</p>
+                    <span class="role-badge doctor-badge">
+                        <i class="fas fa-user-md"></i> Doctor
+                    </span>
+                </div>
+            </div>
+            
+            <nav class="sidebar-menu">
+                <a href="dashboard-doctor.html">
+                    <i class="fas fa-home"></i> <span>Dashboard</span>
+                </a>
+                <a href="create-prescription.html">
+                    <i class="fas fa-file-medical"></i> <span>Create Prescription</span>
+                </a>
+                <a href="medicine-identify.html" class="active">
+                    <i class="fas fa-pills"></i> <span>Medicine Identify</span>
+                </a>
+                <a href="#" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i> <span>Logout</span>
+                </a>
+            </nav>
+        </aside>
+        
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="main-header">
+                <div class="header-left">
+                    <h1>Medicine Identification</h1>
+                    <p>Upload medicine image for identification using AI</p>
+                </div>
+                <div class="header-right">
+                    <button class="btn-secondary" onclick="window.location.href='dashboard-doctor.html'">
+                        <i class="fas fa-arrow-left"></i> Back to Dashboard
+                    </button>
+                </div>
+            </header>
+            
+            <div class="medicine-id-container">
+                <!-- Upload Area -->
+                <div class="upload-area" id="uploadArea" onclick="document.getElementById('medicineImage').click()">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                    <h3>Upload Medicine Image</h3>
+                    <p>Click to browse or drag & drop image of the medicine</p>
+                    <p class="formats">Supported formats: JPG, PNG, JPEG (Max 5MB)</p>
+                    <input type="file" id="medicineImage" accept="image/*" style="display: none;" onchange="handleImageUpload(event)">
+                </div>
+                
+                <!-- Image Preview -->
+                <div class="preview-box" id="previewBox">
+                    <h3><i class="fas fa-image"></i> Image Preview</h3>
+                    <img id="imagePreview" src="" alt="Medicine Preview">
+                    <div class="preview-actions">
+                        <button class="btn-secondary" onclick="clearImage()">
+                            <i class="fas fa-trash"></i> Remove Image
+                        </button>
+                        <button class="btn-primary" onclick="identifyMedicine()" id="identifyBtn">
+                            <i class="fas fa-search"></i> Identify Medicine
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Scanning Animation -->
+                <div class="scanning-animation" id="scanningAnimation">
+                    <div class="scanning-circle"></div>
+                    <h3>Identifying Medicine...</h3>
+                    <p>Analyzing image using AI model</p>
+                </div>
+                
+                <!-- Results -->
+                <div class="result-box" id="resultBox">
+                    <h3><i class="fas fa-pills"></i> Identification Results</h3>
+                    <div class="medicine-details">
+                        <div class="detail-item">
+                            <label>Medicine Name</label>
+                            <span id="medName">Paracetamol 500mg</span>
+                        </div>
+                        <div class="detail-item">
+                            <label>Generic Name</label>
+                            <span id="medGeneric">Acetaminophen</span>
+                        </div>
+                        <div class="detail-item">
+                            <label>Manufacturer</label>
+                            <span id="medManufacturer">GSK Pharmaceuticals</span>
+                        </div>
+                        <div class="detail-item">
+                            <label>Dosage Form</label>
+                            <span id="medDosageForm">Tablet</span>
+                        </div>
+                        <div class="detail-item">
+                            <label>Strength</label>
+                            <span id="medStrength">500 mg</span>
+                        </div>
+                        <div class="detail-item">
+                            <label>Uses</label>
+                            <span id="medUses">Fever, Pain Relief</span>
+                        </div>
+                    </div>
+                    
+                    <div class="accuracy-meter">
+                        <label>Identification Accuracy</label>
+                        <div class="meter-bar">
+                            <div class="meter-fill" id="accuracyFill" style="width: 85%"></div>
+                        </div>
+                        <p class="accuracy-text">85% Confidence</p>
+                    </div>
+                    
+                    <div class="result-actions">
+                        <button class="btn-secondary" onclick="saveToPrescription()">
+                            <i class="fas fa-file-medical"></i> Add to Prescription
+                        </button>
+                        <button class="btn-primary" onclick="searchAlternative()">
+                            <i class="fas fa-exchange-alt"></i> Find Alternatives
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- History -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3><i class="fas fa-history"></i> Recent Identifications</h3>
+                    </div>
+                    <div class="card-body">
+                        <div id="identificationHistory">
+                            <!-- Will be populated by JavaScript -->
+                            <p class="loading-text">Loading history...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <script src="js/auth.js"></script>
+    <script src="js/script.js"></script>
+    <script src="js/medicine-id.js"></script>
+</body>
+</html>

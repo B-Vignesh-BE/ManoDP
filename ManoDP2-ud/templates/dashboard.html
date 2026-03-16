@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container mt-4">
+
+<h2 class="mb-4">Welcome, {{ current_user.username }}</h2>
+
+<div class="row g-4">
+
+<!-- Identify Medicine -->
+
+<div class="col-md-3">
+<a href="/upload_medicine" style="text-decoration:none;">
+<div class="card dashboard-card text-center">
+
+<h3>📷</h3>
+<h5>Identify Medicine</h5>
+<p>Scan or upload medicine image</p>
+
+</div>
+</a>
+</div>
+
+<!-- Add Prescription -->
+
+<div class="col-md-3">
+<a href="/add_prescription" style="text-decoration:none;">
+<div class="card dashboard-card text-center">
+
+<h3>📝</h3>
+<h5>Add Prescription</h5>
+<p>Create prescription for patient</p>
+
+</div>
+</a>
+</div>
+
+<!-- My Prescriptions -->
+
+<div class="col-md-3">
+<a href="/my_prescriptions" style="text-decoration:none;">
+<div class="card dashboard-card text-center">
+
+<h3>📄</h3>
+<h5>My Prescriptions</h5>
+<p>View prescriptions list</p>
+
+</div>
+</a>
+</div>
+
+<!-- Medicine History -->
+
+<div class="col-md-3">
+<a href="/history" style="text-decoration:none;">
+<div class="card dashboard-card text-center">
+
+<h3>💊</h3>
+<h5>Medicine History</h5>
+<p>Previously scanned medicines</p>
+
+</div>
+</a>
+</div>
+
+</div>
+
+</div>
+
+<style>
+
+/* dashboard cards */
+
+.dashboard-card{
+height:200px;
+display:flex;
+flex-direction:column;
+justify-content:center;
+align-items:center;
+transition:0.3s;
+border-radius:12px;
+}
+
+.dashboard-card h3{
+font-size:40px;
+margin-bottom:10px;
+}
+
+.dashboard-card:hover{
+transform:translateY(-8px) scale(1.03);
+box-shadow:0 15px 40px rgba(0,0,0,0.4);
+}
+
+</style>
+
+{% endblock %}

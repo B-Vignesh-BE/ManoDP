@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h2 style="text-align:center; color:#0f766e; margin-bottom:30px;">
+My Prescriptions
+</h2>
+
+{% if prescriptions %}
+
+<div style="display:flex; flex-wrap:wrap; gap:20px; justify-content:center;">
+
+{% for p in prescriptions %}
+
+<div class="card" style="width:300px;">
+
+<h4 style="color:#0f766e;">{{ p.medicine_name }}</h4>
+
+<p>
+<b>Dosage:</b> {{ p.dosage }}
+</p>
+
+<p>
+<b>Timing:</b> {{ p.timing }}
+</p>
+
+<p>
+<b>Status:</b> 
+<span style="
+color:white;
+padding:5px 10px;
+border-radius:10px;
+background:{% if p.status=='Taken' %}green{% else %}orange{% endif %};
+">
+{{ p.status }}
+</span>
+</p>
+
+{% if current_user.role == "patient" and p.status != "Taken" %}
+
+<a href="/mark_taken/{{ p.id }}">
+<button class="btn btn-primary btn-sm">
+Mark as Taken
+</button>
+</a>
+
+{% endif %}
+
+</div>
+
+{% endfor %}
+
+</div>
+
+{% else %}
+
+<p style="text-align:center; color:gray;">
+No prescriptions found
+</p>
+
+{% endif %}
+
+{% endblock %}

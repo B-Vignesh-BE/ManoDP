@@ -1,0 +1,152 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<style>
+/* 🌈 Animated Gradient Background */
+body {
+    background: linear-gradient(-45deg, #0f2027, #203a43, #2c5364, #1e3c72);
+    background-size: 400% 400%;
+    animation: gradientBG 12s ease infinite;
+    min-height: 100vh;
+}
+
+@keyframes gradientBG {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* ✨ Glass Card */
+.glass-card {
+    backdrop-filter: blur(15px);
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    border: 1px solid rgba(255,255,255,0.2);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+    padding: 40px;
+    width: 400px;
+    margin: 80px auto;
+    color: white;
+    animation: fadeIn 1.2s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.glass-card h2 {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+/* 🎨 Inputs */
+.glass-card input,
+.glass-card select {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 18px;
+    border-radius: 10px;
+    border: none;
+    outline: none;
+    background: rgba(255,255,255,0.2);
+    color: white;
+    transition: 0.3s;
+}
+
+.glass-card input::placeholder {
+    color: #ddd;
+}
+
+.glass-card input:focus,
+.glass-card select:focus {
+    background: rgba(255,255,255,0.3);
+    transform: scale(1.03);
+}
+
+/* 🚀 Button Animation */
+.register-btn {
+    width: 100%;
+    padding: 12px;
+    border-radius: 25px;
+    border: none;
+    background: linear-gradient(45deg, #00c6ff, #0072ff);
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.4s;
+}
+
+.register-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 15px #00c6ff;
+}
+
+/* 🔵 Floating Circles */
+.circle {
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.1);
+    animation: float 10s infinite ease-in-out;
+}
+
+.circle1 { width: 200px; height: 200px; top: 10%; left: 10%; }
+.circle2 { width: 150px; height: 150px; bottom: 15%; right: 15%; animation-delay: 3s; }
+.circle3 { width: 100px; height: 100px; top: 50%; right: 5%; animation-delay: 5s; }
+
+@keyframes float {
+    0%,100% { transform: translateY(0); }
+    50% { transform: translateY(-30px); }
+}
+
+.login-link {
+    text-align: center;
+    margin-top: 20px;
+    color: #ddd;
+}
+
+.login-link a {
+    color: #00c6ff;
+    text-decoration: none;
+}
+.login-link a:hover {
+    text-decoration: underline;
+}
+</style>
+
+<!-- Floating Background Elements -->
+<div class="circle circle1"></div>
+<div class="circle circle2"></div>
+<div class="circle circle3"></div>
+
+<div class="glass-card">
+
+    <h2>Create Account</h2>
+
+    <form method="POST">
+
+        <input type="text" name="username" placeholder="Username" required>
+
+        <input type="email" name="email" placeholder="Email Address" required>
+
+        <input type="password" name="password" placeholder="Password" required>
+
+        <select name="role" required>
+            <option value="">Select Role</option>
+            <option value="doctor">Doctor</option>
+            <option value="patient">Patient</option>
+            <option value="pharmacy">Pharmacy</option>
+        </select>
+
+        <button type="submit" class="register-btn">Register</button>
+
+    </form>
+
+    <div class="login-link">
+        Already have an account? <a href="/login">Login</a>
+    </div>
+
+</div>
+
+{% endblock %}

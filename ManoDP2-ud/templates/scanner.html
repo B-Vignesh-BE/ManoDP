@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container mt-4">
+
+<h2 class="mb-4">Medicine Scanner</h2>
+
+<div class="row">
+
+<div class="col-md-6">
+
+<div class="card p-4">
+
+<h4>Upload Medicine Image</h4>
+
+<form action="/scan" method="POST" enctype="multipart/form-data">
+
+<input type="file" name="image" class="form-control mb-3" required>
+
+<button class="btn btn-primary">
+Scan Medicine
+</button>
+
+</form>
+
+</div>
+
+</div>
+
+
+<div class="col-md-6">
+
+<div class="card p-4">
+
+<h4>Camera Scan</h4>
+
+<video id="camera" width="100%" autoplay></video>
+
+<button class="btn btn-success mt-3" onclick="captureImage()">
+Capture Image
+</button>
+
+<canvas id="canvas" style="display:none;"></canvas>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<script>
+
+const video = document.getElementById('camera');
+
+navigator.mediaDevices.getUserMedia({ video: true })
+.then(stream => {
+    video.srcObject = stream;
+});
+
+function captureImage(){
+
+const canvas = document.getElementById('canvas');
+const video = document.getElementById('camera');
+
+canvas.width = video.videoWidth;
+canvas.height = video.videoHeight;
+
+const ctx = canvas.getContext('2d');
+ctx.drawImage(video,0,0);
+
+canvas.toBlob(function(blob){
+
+let formData = new FormData();
+formData.append("image", blob, "camera.jpg");
+
+fetch("/scan",{
+method:"POST",
+body:formData
+})
+.then(response => response.text())
+.then(data => {
+document.open();
+document.write(data);
+document.close();
+});
+
+});
+
+}
+
+</script>
+
+{% endblock %}

@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container mt-4">
+
+<div class="card p-4 text-center">
+
+<h2>Prediction Result</h2>
+
+<br>
+
+<!-- Display uploaded/captured image -->
+<img src="{{ url_for('static', filename=image) }}" 
+     width="250"
+     style="border-radius:10px; display:block; margin:auto;">
+
+<br>
+
+<!-- Medicine name -->
+<h3>{{ result }}</h3>
+
+<!-- Confidence bar -->
+<div style="background:#e0f2f1; border-radius:20px; height:25px; margin-top:20px;">
+    <div style="
+        height:25px;
+        width: {{ confidence }}%;
+        background:#14b8a6;
+        border-radius:20px;
+        text-align:center;
+        color:white;
+        line-height:25px;
+    ">
+        {{ confidence }}%
+    </div>
+</div>
+
+<br>
+
+<!-- Medicine Details -->
+{% if medicine %}
+
+<div class="mt-4 text-start">
+
+<h4>Medicine Information</h4>
+
+<p><b>Uses:</b> {{ medicine.uses }}</p>
+
+<p><b>Dosage:</b> {{ medicine.dosage }}</p>
+
+<p><b>Side Effects:</b> {{ medicine.side_effects }}</p>
+
+</div>
+
+{% else %}
+
+<p class="mt-3">No medicine information found.</p>
+
+{% endif %}
+
+<br>
+
+<!-- Buttons -->
+
+<a href="/upload_medicine">
+<button class="btn btn-primary">Try Another</button>
+</a>
+
+<a href="/scanner">
+<button class="btn btn-success">Scan Using Camera</button>
+</a>
+
+</div>
+
+</div>
+
+{% endblock %}
